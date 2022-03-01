@@ -12,7 +12,7 @@ def confidence():
     return confidence
 
 def durationChoosed():
-    durationChoosed = float(os.getenv("DURATION")) + round(random.uniform(0,1.5), 10)
+    durationChoosed = float(os.getenv("DURATION")) + round(random.uniform(0,os.getenv("DURATION_RANGE")), 10)
     return durationChoosed
 
 def reiniciarAPagina():
@@ -70,14 +70,14 @@ def procurarImagemSemRetornarErroComARegiaoDasCartas(imagem, x, y):
     return False
 
 def adventureClick():
-    if procurarImagemSemRetornarErro('adventure'):
+    while procurarImagemSemRetornarErro('adventure'):
         x, y = pyautogui.locateCenterOnScreen('./assets/adventure.png', confidence=confidence())
         x = (x-140) + round(random.uniform(0,280))
         y = (y-25) + round(random.uniform(0,50))
         pyautogui.click(x, y, duration=durationChoosed())
 
 def clickStart():
-    if procurarImagemSemRetornarErro('start'):
+    while procurarImagemSemRetornarErro('start'):
         x, y = pyautogui.locateCenterOnScreen('./assets/start.png', confidence=confidence())
         x = (x-140) + round(random.uniform(0,280))
         y = (y-25) + round(random.uniform(0,50))
@@ -93,7 +93,9 @@ def chooseCard():
                 contador = 0
                 while energyInTheGame == False:
                     energy = 2
-                    if procurarImagemSemRetornarErroComARegiaoDasCartas('0energy', x, y):
+                    if contador >= 2:
+                        energyInTheGame = True
+                    elif procurarImagemSemRetornarErroComARegiaoDasCartas('0energy', x, y):
                         clickInTheCard('0energy', 0, x, y)
                     elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card1', x, y):
                         clickInTheCard('cards/card1', energy, x, y)
@@ -117,9 +119,8 @@ def chooseCard():
                         clickInTheCard('cards/card10', energy, x, y)
                     elif procurarImagemSemRetornarErroComARegiaoDasCartas('2energy', x, y):
                         clickInTheCard('2energy', energy, x, y)
-                    elif contador >= 10:
-                        energyInTheGame = True
-                    contador+=1
+                    else:
+                        contador+=1
                     energyInTheGame = procurarImagemSemRetornarErro('0energyInTheGame')
                 x = (x-100) + round(random.uniform(0,200))
                 y = (y-30) + round(random.uniform(0,60))
