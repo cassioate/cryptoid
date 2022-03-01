@@ -1,0 +1,4 @@
+#Valor de confiança que o python deve reconhecer a imagem
+CONFIDENCE=0.95
+
+DURATION=1.0
