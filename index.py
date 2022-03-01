@@ -241,15 +241,15 @@ def start(loop, contador):
     adventureClick()
     try:
         while contador <= 10:
-            clickStart()
-            chooseCard()     
-            contador+=1
-            # if procurarImagemSemRetornarErro('360'):
-            #     contador = 10
-            #     loop = False
-        recorverEnergy()
-        # if not procurarImagemSemRetornarErro('360'):
-        #     recorverEnergy()
+            if procurarImagemSemRetornarErro('360'):
+                contador = 12
+                loop = False
+            else:
+                clickStart()
+                chooseCard()     
+                contador+=1
+        if not procurarImagemSemRetornarErro('360'):
+            recorverEnergy()
         return loop, contador
     except BaseException as err:
         return loop, contador
