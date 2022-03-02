@@ -10,12 +10,12 @@ import datetime
 dotenv.load_dotenv()
 
 # print(random.uniform(0,160), 10)
-
-x, y = pyautogui.locateCenterOnScreen('./assets/cards/card9.png', confidence=0.95)
+# img = pyautogui.locateCenterOnScreen('./assets/'+ imagem+'.png', confidence=confidence(), region=(0, y, x, 325))
+x, y = pyautogui.locateCenterOnScreen('./assets/endTurn.png', confidence=0.95)
 # x = (x-27) + round(random.uniform(0,54))
 # y = (y-27) + round(random.uniform(0,54))
 pyautogui.moveTo(x, y)
-# pyautogui.screenshot('my_screenshot.png', region=(0, y, x, 300))
+pyautogui.screenshot('my_screenshot.png', region=(0, y, x, 325))
 # pyautogui.screenshot('my_screenshot.png', region=(x-25,(newY+54+variacaoDoY), 45,40))
 # print(img)
 # print(pyautogui.position())
