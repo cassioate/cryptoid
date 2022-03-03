@@ -319,8 +319,8 @@ def recorverEnergy():
 
 def start(loop, contador):
     adventureClick()
-    try:
-        while contador <= 10:
+    # try:
+    while contador <= 10:
                 if procurarImagemSemRetornarErro('360'):
                     contador = 12
                     loop = False
@@ -328,22 +328,22 @@ def start(loop, contador):
                     clickStart()
                     chooseCard()     
                     contador+=1
-        if not procurarImagemSemRetornarErro('360'):
+    if not procurarImagemSemRetornarErro('360'):
             recorverEnergy()
-        return loop, contador
-    except BaseException as err:
-        return loop, contador
+    return loop, contador
+    # except BaseException as err:
+    #     return loop, contador
 
 contador = 0
 loop = True
 while loop:
-    try:
+    # try:
         loop, contador = start(loop, contador)
         if contador < 10:
             raise Exception("Erro antes de realizar 10 partidas")
         else:
             contador = 0
-    except BaseException as err:
-        reiniciarAPagina()
-        print("OCORREU UM ERRO!")
-        print(err)
+    # except BaseException as err:
+    #     reiniciarAPagina()
+    #     print("OCORREU UM ERRO!")
+    #     print(err)
