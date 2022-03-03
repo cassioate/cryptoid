@@ -42,30 +42,37 @@ def procurarLocalizacaoDaImagemPelosEixos(imagem):
 def procurarImagemSemRetornarErro(imagem):
     img = None
     contador = 0
-    while img == None:
-        img = pyautogui.locateCenterOnScreen('./assets/'+ imagem+'.png', confidence=confidence())
-        if img != None:
-            if imagem != '0energyInTheGame':
-                print('Achei a imagem: ' + imagem)
-            return True
-        contador += 1
-        if contador >= 3:
-            img = True
+    # while img == None:
+    img = pyautogui.locateCenterOnScreen('./assets/'+ imagem+'.png', confidence=confidence())
+    if img != None:
+        if imagem != '0energyInTheGame':
+            print('Achei a imagem: ' + imagem)
+        return True
+    # contador += 1
+    # if contador >= 3:
+    #     img = True
     return False
 
 def procurarImagemSemRetornarErroComARegiaoDasCartas(imagem, x, y):
     img = None
     contador = 0
-    while img == None:
-        img = pyautogui.locateCenterOnScreen('./assets/'+ imagem+'.png', confidence=confidence(), region=(0, y, x, 325))
-        if img != None:
-            if imagem != '0energyInTheGame':
-                print('Achei a imagem: ' + imagem)
-            return True
-        if contador >= 2:
-            img = True
-        contador += 1
+    # for i in range(2):
+    img = pyautogui.locateCenterOnScreen('./assets/'+ imagem+'.png', confidence=confidence(), region=(0, y, x, 325))
+    if img != None:
+        if imagem != '0energyInTheGame':
+            print('Achei a imagem: ' + imagem)
+        return True
     return False
+    # while img == None:
+    #     img = pyautogui.locateCenterOnScreen('./assets/'+ imagem+'.png', confidence=confidence(), region=(0, y, x, 325))
+    #     if img != None:
+    #         if imagem != '0energyInTheGame':
+    #             print('Achei a imagem: ' + imagem)
+    #         return True
+    #     if contador >= 1:
+    #         img = True
+    #     contador += 1
+    # return False
 
 def adventureClick():
     while procurarImagemSemRetornarErro('adventure'):
@@ -83,15 +90,19 @@ def clickStart():
 
 def chooseCardInTheGame():
     contador = 0
+    if procurarImagemSemRetornarErro('reconnect'):
+        reiniciarAPagina()
+        raise Exception("Encontado botão de reconnect na tela - ChooseCard")
     x, y = procurarLocalizacaoDaImagemPelosEixos('endTurn')
     if x != None:
-        while not procurarImagemSemRetornarErro('0energyInTheGame'):
+        energyInTheGame = procurarImagemSemRetornarErro('0energyInTheGame')
+        while not energyInTheGame:
+            entroNoElse = False
             if procurarImagemSemRetornarErro('reconnect'):
+                reiniciarAPagina()
                 raise Exception("Encontado botão de reconnect na tela - ChooseCard")
-            if findEnd():
-                zeroEnergyInTheGame = True
-            elif procurarImagemSemRetornarErroComARegiaoDasCartas('0energy', x, y):
-                clickInTheCard('0energy', x, y)
+            elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card0', x, y):
+                clickInTheCard('cards/card0', x, y)
             elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card1', x, y):
                 clickInTheCard('cards/card1', x, y)
             elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card2', x, y):
@@ -112,13 +123,74 @@ def chooseCardInTheGame():
                 clickInTheCard('cards/card9', x, y)
             elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card10', x, y):
                 clickInTheCard('cards/card10', x, y)
-            elif procurarImagemSemRetornarErroComARegiaoDasCartas('2energy', x, y):
-                clickInTheCard('2energy', x, y)
-            elif contador >= 6:
+            elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card11', x, y):
+                clickInTheCard('cards/card11', x, y)
+            else:
+                print("NÃO ACHEI MAIS CARTAS")
+                entroNoElse = True
                 energyInTheGame = True
+            if not entroNoElse and not procurarImagemSemRetornarErro('10EnergyIntheGame'): 
+                energyInTheGame = procurarImagemSemRetornarErro('0energyInTheGame')
             contador+=1
+            if contador > 7:
+                entroNoElse = True
+                energyInTheGame = True
             ## apenas para evitar que jogue uma carta desnecessaria, devido ao delay na mudança de imagem na tela
-            if contador > 2:
+            if contador > 4:
+                time.sleep(2)
+        x = (x-100) + round(random.uniform(0,200))
+        y = (y-30) + round(random.uniform(0,60))
+        pyautogui.click(x, y, duration=durationChoosed())
+
+def chooseCardInTheGameW1W2():
+    contador = 0
+    if procurarImagemSemRetornarErro('reconnect'):
+        reiniciarAPagina()
+        raise Exception("Encontado botão de reconnect na tela - ChooseCard")
+    x, y = procurarLocalizacaoDaImagemPelosEixos('endTurn')
+    if x != None:
+        energyInTheGame = procurarImagemSemRetornarErro('0energyInTheGame')
+        while not energyInTheGame:
+            entroNoElse = False
+            if procurarImagemSemRetornarErro('reconnect'):
+                reiniciarAPagina()
+                raise Exception("Encontado botão de reconnect na tela - ChooseCard")
+            elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card2', x, y):
+                clickInTheCard('cards/card2', x, y)
+            elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card3', x, y):
+                clickInTheCard('cards/card3', x, y)
+            elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card4', x, y):
+                clickInTheCard('cards/card4', x, y)
+            elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card5', x, y):
+                clickInTheCard('cards/card5', x, y)
+            elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card6', x, y):
+                clickInTheCard('cards/card6', x, y)
+            elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card7', x, y):
+                clickInTheCard('cards/card7', x, y)
+            elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card8', x, y):
+                clickInTheCard('cards/card8', x, y)
+            elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card9', x, y):
+                clickInTheCard('cards/card9', x, y)
+            elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card10', x, y):
+                clickInTheCard('cards/card10', x, y)
+            elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card11', x, y):
+                clickInTheCard('cards/card11', x, y)
+            elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card0', x, y):
+                clickInTheCard('cards/card0', x, y)
+            elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card1', x, y):
+                clickInTheCard('cards/card1', x, y)
+            else:
+                print("NÃO ACHEI MAIS CARTAS")
+                entroNoElse = True
+                energyInTheGame = True
+            if not entroNoElse and not procurarImagemSemRetornarErro('10EnergyIntheGame'): 
+                energyInTheGame = procurarImagemSemRetornarErro('0energyInTheGame')
+            contador+=1
+            if contador > 7:
+                entroNoElse = True
+                energyInTheGame = True
+            ## apenas para evitar que jogue uma carta desnecessaria, devido ao delay na mudança de imagem na tela
+            if contador > 4:
                 time.sleep(2)
         x = (x-100) + round(random.uniform(0,200))
         y = (y-30) + round(random.uniform(0,60))
@@ -127,7 +199,10 @@ def chooseCardInTheGame():
 def chooseCard():
     endOfTheGame = False
     while endOfTheGame == False:
-        chooseCardInTheGame()
+        if procurarImagemSemRetornarErro('w1w2'):
+            chooseCardInTheGameW1W2()
+        else:
+            chooseCardInTheGame()
         endOfTheGame = findEnd()
 
 def clickInTheCard(card, x, y):   
@@ -243,13 +318,13 @@ def recorverEnergy():
     clickInTheXRedButton()
 
 def start(loop, contador):
-    adventureClick()
     try:
         while contador <= 10:
                 if procurarImagemSemRetornarErro('360'):
                     contador = 12
                     loop = False
                 else:
+                    adventureClick()
                     clickStart()
                     chooseCard()     
                     contador+=1
@@ -265,10 +340,12 @@ while loop:
     try:
         loop, contador = start(loop, contador)
         if contador < 10:
+            reiniciarAPagina()
             raise Exception("Erro antes de realizar 10 partidas")
         else:
             contador = 0
     except BaseException as err:
-        reiniciarAPagina()
+        while not procurarImagemSemRetornarErro('adventure'):
+            time.sleep(1)
         print("OCORREU UM ERRO!")
         print(err)
