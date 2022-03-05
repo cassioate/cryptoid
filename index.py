@@ -123,8 +123,8 @@ def chooseCardInTheGame():
             ## apenas para evitar que jogue uma carta desnecessaria, devido ao delay na mudança de imagem na tela
             if contador > 4:
                 time.sleep(2)
-        x = (x-100) + round(random.uniform(0,200))
-        y = (y-30) + round(random.uniform(0,60))
+        x = (x-75) + round(random.uniform(0,150))
+        y = (y-20) + round(random.uniform(0,40))
         pyautogui.click(x, y, duration=durationChoosed())
 
 def chooseCardInTheGameW1W2():
@@ -173,8 +173,8 @@ def chooseCardInTheGameW1W2():
             ## apenas para evitar que jogue uma carta desnecessaria, devido ao delay na mudança de imagem na tela
             if contador > 4:
                 time.sleep(2)
-        x = (x-100) + round(random.uniform(0,200))
-        y = (y-30) + round(random.uniform(0,60))
+        x = (x-75) + round(random.uniform(0,150))
+        y = (y-20) + round(random.uniform(0,40))
         pyautogui.click(x, y, duration=durationChoosed())
 
 def chooseCard():
@@ -189,13 +189,13 @@ def chooseCard():
 def clickInTheCard(card, x, y):   
     if card == '2energy' or card == '0energy':
         xEnergy, yEnergy = pyautogui.locateCenterOnScreen('./assets/'+card+'.png', confidence=confidence(), region=(0, y, x, 325))
-        xEnergy = xEnergy + round(random.uniform(0,110))
-        yEnergy = yEnergy + round(random.uniform(0,160))
+        xEnergy = (xEnergy-40) + round(random.uniform(0,80))
+        yEnergy = (yEnergy-60) + round(random.uniform(0,120))
         pyautogui.click(xEnergy, yEnergy, duration=durationChoosed())
     else:
         xEnergy, yEnergy = pyautogui.locateCenterOnScreen('./assets/'+card+'.png', confidence=confidence(), region=(0, y, x, 325))
-        xEnergy = (xEnergy-52) + round(random.uniform(0,104))
-        yEnergy = (yEnergy-80) + round(random.uniform(0,160))
+        xEnergy = (xEnergy-40) + round(random.uniform(0,80))
+        yEnergy = (yEnergy-60) + round(random.uniform(0,120))
         pyautogui.click(xEnergy, yEnergy, duration=durationChoosed())
 
 def findEnd():
@@ -251,6 +251,10 @@ def clickInTheXRedButton():
         x = (x-27) + round(random.uniform(0,54))
         y = (y-27) + round(random.uniform(0,54))
         pyautogui.click(x, y, duration=durationChoosed())
+    
+def checkEnergy():
+    if procurarImagemSemRetornarErro('0of10energy'):
+        clickInTheArrowBackButton()
 
 def clickInTheFriendsButton():
     if procurarImagemSemRetornarErro('friends'):
@@ -275,7 +279,7 @@ def clickInTheReceiveEnergyAndSendEnergy():
 
 def dragInTheMenu1x():
     x, y = procurarLocalizacaoDaImagemPelosEixos("friendsToDrag")
-    pyautogui.moveTo(x, y+800)
+    pyautogui.moveTo(x, y+500)
     pyautogui.mouseDown(button='left')
     #BEM MELHOR usar moveTo no lugar de dragTO
     pyautogui.moveTo(x, y+20, duration=2)
