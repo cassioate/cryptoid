@@ -79,18 +79,14 @@ def clickStart():
 
 def chooseCardInTheGame():
     contador = 0
-    if procurarImagemSemRetornarErro('reconnect'):
-        reiniciarAPagina()
-        raise Exception("Encontado botão de reconnect na tela - ChooseCard")
+    reconnect()
     x, y = procurarLocalizacaoDaImagemPelosEixos('endTurn')
     if x != None:
         energyInTheGame = procurarImagemSemRetornarErro('0energyInTheGame')
         while not energyInTheGame:
             entroNoElse = False
-            if procurarImagemSemRetornarErro('reconnect'):
-                reiniciarAPagina()
-                raise Exception("Encontado botão de reconnect na tela - ChooseCard")
-            elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card0', x, y):
+            reconnect()
+            if procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card0', x, y):
                 clickInTheCard('cards/card0', x, y)
             elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card1', x, y):
                 clickInTheCard('cards/card1', x, y)
@@ -133,18 +129,14 @@ def chooseCardInTheGame():
 
 def chooseCardInTheGameW1W2():
     contador = 0
-    if procurarImagemSemRetornarErro('reconnect'):
-        reiniciarAPagina()
-        raise Exception("Encontado botão de reconnect na tela - ChooseCard")
+    reconnect()
     x, y = procurarLocalizacaoDaImagemPelosEixos('endTurn')
     if x != None:
         energyInTheGame = procurarImagemSemRetornarErro('0energyInTheGame')
         while not energyInTheGame:
             entroNoElse = False
-            if procurarImagemSemRetornarErro('reconnect'):
-                reiniciarAPagina()
-                raise Exception("Encontado botão de reconnect na tela - ChooseCard")
-            elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card2', x, y):
+            reconnect()
+            if procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card2', x, y):
                 clickInTheCard('cards/card2', x, y)
             elif procurarImagemSemRetornarErroComARegiaoDasCartas('cards/card3', x, y):
                 clickInTheCard('cards/card3', x, y)
@@ -294,9 +286,7 @@ def dragInTheMenu1x():
 
 def recorverEnergy():
     clickInTheArrowBackButton()
-    print("Entrei-12")
     clickInTheFriendsButton()
-    print("Entrei-13")
     takeEnergy()
     clickInTheArrowBackButton()
     clickIntheQuestButton()
@@ -324,18 +314,14 @@ def reconnect():
             time.sleep(1)
         raise Exception("Encontado botão de reconnect na tela - clickStart")
 
-def start(loop):
-    print("ENTREI START")
+def start(loop, noNeedEnergy):
     adventureClick()
     loopWhile = True
     while loopWhile:
         reconnect()
-        print("ENTREI LOOP")
         if find0of10energy() and not noNeedEnergy:
-            print("ENTREI 0de10")
             loopWhile = False
         elif procurarImagemSemRetornarErro('360') and find0of10energy():
-            print("ENTREI 360")
             loopWhile = False
             loop = False
         else:
@@ -347,7 +333,7 @@ loop = True
 noNeedEnergy = False
 while loop:
     try:
-        loop = start(loop)
+        loop = start(loop, noNeedEnergy)
         if not noNeedEnergy:
             recorverEnergy()
             noNeedEnergy = True
