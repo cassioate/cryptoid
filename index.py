@@ -42,51 +42,44 @@ def procurarLocalizacaoDaImagemPelosEixos(imagem):
 def procurarImagemSemRetornarErro(imagem):
     img = None
     contador = 0
-    # while img == None:
     img = pyautogui.locateCenterOnScreen('./assets/'+ imagem+'.png', confidence=confidence())
     if img != None:
         if imagem != '0energyInTheGame':
             print('Achei a imagem: ' + imagem)
         return True
-    # contador += 1
-    # if contador >= 3:
-    #     img = True
     return False
 
 def procurarImagemSemRetornarErroComARegiaoDasCartas(imagem, x, y):
     img = None
     contador = 0
-    # for i in range(2):
     img = pyautogui.locateCenterOnScreen('./assets/'+ imagem+'.png', confidence=confidence(), region=(0, y, x, 325))
     if img != None:
         if imagem != '0energyInTheGame':
             print('Achei a imagem: ' + imagem)
         return True
     return False
-    # while img == None:
-    #     img = pyautogui.locateCenterOnScreen('./assets/'+ imagem+'.png', confidence=confidence(), region=(0, y, x, 325))
-    #     if img != None:
-    #         if imagem != '0energyInTheGame':
-    #             print('Achei a imagem: ' + imagem)
-    #         return True
-    #     if contador >= 1:
-    #         img = True
-    #     contador += 1
-    # return False
 
 def adventureClick():
     while procurarImagemSemRetornarErro('adventure'):
+        if procurarImagemSemRetornarErro('reconnect'):
+            reiniciarAPagina()
+            raise Exception("Encontado botão de reconnect na tela - adventureClick")
         x, y = pyautogui.locateCenterOnScreen('./assets/adventure.png', confidence=confidence())
         x = (x-140) + round(random.uniform(0,280))
         y = (y-25) + round(random.uniform(0,50))
         pyautogui.click(x, y, duration=durationChoosed())
+        time.sleep(5)
 
 def clickStart():
     while procurarImagemSemRetornarErro('start'):
+        if procurarImagemSemRetornarErro('reconnect'):
+            reiniciarAPagina()
+            raise Exception("Encontado botão de reconnect na tela - clickStart")
         x, y = pyautogui.locateCenterOnScreen('./assets/start.png', confidence=confidence())
         x = (x-140) + round(random.uniform(0,280))
         y = (y-25) + round(random.uniform(0,50))
         pyautogui.click(x, y, duration=durationChoosed())
+        time.sleep(5)
 
 def chooseCardInTheGame():
     contador = 0
@@ -313,37 +306,43 @@ def recorverEnergy():
     takeEnergy()
     clickInTheArrowBackButton()
     clickIntheQuestButton()
-    for i in range(4):
+    for i in range(5):
         clickInTheClaimButton()
     clickInTheXRedButton()
+    time.sleep(15)
 
-def start(loop, contador):
+def find0of10energy():
+    img = None
+    if procurarImagemSemRetornarErro('raio'):
+        x, y = pyautogui.locateCenterOnScreen('./assets/raio.png', confidence=0.95)
+        img = pyautogui.locateCenterOnScreen('./assets/0of10energy.png', confidence=confidence(), region=(x, y-20, 80, 50))
+        if img != None:
+            return True
+        return False
+
+def start(noNeedEnergy, loop):
     adventureClick()
-    # try:
-    while contador <= 10:
-                if procurarImagemSemRetornarErro('360'):
-                    contador = 12
-                    loop = False
-                else:
-                    clickStart()
-                    chooseCard()     
-                    contador+=1
-    if not procurarImagemSemRetornarErro('360'):
-            recorverEnergy()
-    return loop, contador
-    # except BaseException as err:
-    #     return loop, contador
+    loopWhile = True
+    while loopWhile:
+        if procurarImagemSemRetornarErro('360'):
+            loopWhile = False
+            loop = False
+        elif find0of10energy():
+            loopWhile = False
+        else:
+            clickStart()
+            chooseCard()
+    return loop
 
 contador = 0
 loop = True
+noNeedEnergy = False
 while loop:
-    # try:
-        loop, contador = start(loop, contador)
-        if contador < 10:
-            raise Exception("Erro antes de realizar 10 partidas")
-        else:
-            contador = 0
-    # except BaseException as err:
-    #     reiniciarAPagina()
-    #     print("OCORREU UM ERRO!")
-    #     print(err)
+    try:
+        loop = start(noNeedEnergy)
+        if not noNeedEnergy:
+            recorverEnergy()
+            noNeedEnergy = True
+    except BaseException as err:
+        print("OCORREU UM ERRO!")
+        print(err)
