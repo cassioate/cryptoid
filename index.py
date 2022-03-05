@@ -320,7 +320,7 @@ def find0of10energy():
             return True
         return False
 
-def start(noNeedEnergy, loop):
+def start(loop):
     adventureClick()
     loopWhile = True
     while loopWhile:
@@ -339,7 +339,7 @@ loop = True
 noNeedEnergy = False
 while loop:
     try:
-        loop = start(noNeedEnergy)
+        loop = start(loop)
         if not noNeedEnergy:
             recorverEnergy()
             noNeedEnergy = True
