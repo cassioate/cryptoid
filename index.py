@@ -61,9 +61,7 @@ def procurarImagemSemRetornarErroComARegiaoDasCartas(imagem, x, y):
 
 def adventureClick():
     while procurarImagemSemRetornarErro('adventure'):
-        if procurarImagemSemRetornarErro('reconnect'):
-            reiniciarAPagina()
-            raise Exception("Encontado botão de reconnect na tela - adventureClick")
+        reconnect()
         x, y = pyautogui.locateCenterOnScreen('./assets/adventure.png', confidence=confidence())
         x = (x-140) + round(random.uniform(0,280))
         y = (y-25) + round(random.uniform(0,50))
@@ -72,9 +70,7 @@ def adventureClick():
 
 def clickStart():
     while procurarImagemSemRetornarErro('start'):
-        if procurarImagemSemRetornarErro('reconnect'):
-            reiniciarAPagina()
-            raise Exception("Encontado botão de reconnect na tela - clickStart")
+        reconnect()
         x, y = pyautogui.locateCenterOnScreen('./assets/start.png', confidence=confidence())
         x = (x-140) + round(random.uniform(0,280))
         y = (y-25) + round(random.uniform(0,50))
@@ -263,10 +259,6 @@ def clickInTheXRedButton():
         x = (x-27) + round(random.uniform(0,54))
         y = (y-27) + round(random.uniform(0,54))
         pyautogui.click(x, y, duration=durationChoosed())
-    
-def checkEnergy():
-    if procurarImagemSemRetornarErro('0of10energy'):
-        clickInTheArrowBackButton()
 
 def clickInTheFriendsButton():
     if procurarImagemSemRetornarErro('friends'):
@@ -301,8 +293,10 @@ def dragInTheMenu1x():
     time.sleep(2)
 
 def recorverEnergy():
-    checkEnergy()
+    clickInTheArrowBackButton()
+    print("Entrei-12")
     clickInTheFriendsButton()
+    print("Entrei-13")
     takeEnergy()
     clickInTheArrowBackButton()
     clickIntheQuestButton()
@@ -313,20 +307,35 @@ def recorverEnergy():
 
 def find0of10energy():
     img = None
-    if procurarImagemSemRetornarErro('raio'):
-        x, y = pyautogui.locateCenterOnScreen('./assets/raio.png', confidence=0.95)
+    imgRaio = pyautogui.locateCenterOnScreen('./assets/raio.png', confidence=0.95)
+    if imgRaio != None:
+        x, y = imgRaio
         img = pyautogui.locateCenterOnScreen('./assets/0of10energy.png', confidence=confidence(), region=(x, y-20, 80, 50))
         if img != None:
             return True
         return False
 
+def reconnect():
+    if procurarImagemSemRetornarErro('reconnect'):
+        x, y = pyautogui.locateCenterOnScreen('./assets/tips.png', confidence=confidence())
+        pyautogui.click(x, y, duration=durationChoosed())
+        reiniciarAPagina()
+        while not procurarImagemSemRetornarErro('adventure'):
+            time.sleep(1)
+        raise Exception("Encontado botão de reconnect na tela - clickStart")
+
 def start(loop):
+    print("ENTREI START")
     adventureClick()
     loopWhile = True
     while loopWhile:
-        if find0of10energy():
+        reconnect()
+        print("ENTREI LOOP")
+        if find0of10energy() and not noNeedEnergy:
+            print("ENTREI 0de10")
             loopWhile = False
-        elif procurarImagemSemRetornarErro('360'):
+        elif procurarImagemSemRetornarErro('360') and find0of10energy():
+            print("ENTREI 360")
             loopWhile = False
             loop = False
         else:
@@ -334,7 +343,6 @@ def start(loop):
             chooseCard()
     return loop
 
-contador = 0
 loop = True
 noNeedEnergy = False
 while loop:
