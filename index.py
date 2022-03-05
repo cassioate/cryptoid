@@ -324,11 +324,11 @@ def start(loop):
     adventureClick()
     loopWhile = True
     while loopWhile:
-        if procurarImagemSemRetornarErro('360'):
+        if find0of10energy():
+            loopWhile = False
+        elif procurarImagemSemRetornarErro('360'):
             loopWhile = False
             loop = False
-        elif find0of10energy():
-            loopWhile = False
         else:
             clickStart()
             chooseCard()
