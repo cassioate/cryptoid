@@ -69,6 +69,7 @@ def adventureClick():
         time.sleep(5)
 
 def clickStart():
+    chooseLevel()
     while procurarImagemSemRetornarErro('start'):
         reconnect()
         x, y = pyautogui.locateCenterOnScreen('./assets/start.png', confidence=confidence())
@@ -76,6 +77,18 @@ def clickStart():
         y = (y-25) + round(random.uniform(0,50))
         pyautogui.click(x, y, duration=durationChoosed())
         time.sleep(5)
+
+def chooseLevelFeature(valor):
+    valor = str(valor)
+    if procurarImagemSemRetornarErro(valor):
+        pyautogui.click(procurarLocalizacaoDaImagemPelosEixos(valor), duration=durationChoosed())
+        time.sleep(2)
+
+def chooseLevel():
+    contador = 12
+    while procurarImagemSemRetornarErro('30de30'):
+        chooseLevelFeature(contador)
+        contador -=1
 
 def chooseCardInTheGame():
     contador = 0
